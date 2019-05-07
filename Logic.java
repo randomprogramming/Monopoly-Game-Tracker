@@ -1,15 +1,14 @@
 import java.util.HashMap;
 import java.util.Scanner;
 
-class UI {
+//This class is supposed to take care of the Logic of the game itself
+class Logic {
     private Scanner input;
 
-    private HashMap<String, Player> players = new HashMap<>();
+    HashMap<String, Player> players = new HashMap<>();
 
-    public UI(Scanner input){
+    Logic(Scanner input){
         this.input = input;
-
-        initGame();
     }
     private int getAmountOfPlayers(){
         System.out.print("Enter the amount of players: ");
@@ -41,7 +40,8 @@ class UI {
         }
         return startingCash;
     }
-    private void initGame(){
+    void initGame(){
+        //Start the game
         int players = getAmountOfPlayers();
         int startingCash = getAmountStartingCash();
         for(var i = 1; i <= players; i++){
