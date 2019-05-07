@@ -47,13 +47,10 @@ class Logic {
         for(var i = 1; i <= players; i++){
             //Get the player names and create the players
             System.out.print("\t" + i + ". player name: ");
-            String name = this.input.nextLine().toLowerCase();
-            this.players.put(name, new Player(startingCash, name));
+            String name = this.input.nextLine();
+            this.players.put(name.toLowerCase(), new Player(startingCash, name));
 
             System.out.println();
-        }
-        for(String name : this.players.keySet()){
-            System.out.println(name);
         }
     }
 }
