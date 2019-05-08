@@ -25,7 +25,7 @@ class CMD {
             //Arraylist keeps its order. The first word will always be the command.
             //Arraylist params: (0)->command
             //                  (1)->player
-            //                  (3)->amount
+            //                  (2)->amount
             switch (inputAsArray.get(0)){
                 case "help":
                     showHelpDialog();
@@ -95,6 +95,26 @@ class CMD {
                         System.out.println("Game isn't started yet, can't do that.");
                     }
                     break;
+                case "pay":
+                    //expecting 3 parameters, person who pays, person who receives, amount
+                    int amountToPay = 0;
+                    String payingPlayer = "";
+                    String receivingPlayer = "";
+                    try{
+                        amountToPay = Integer.parseInt(inputAsArray.get(2));
+                        payingPlayer = inputAsArray.get(1);
+                        receivingPlayer = inputAsArray.get(3);
+                    }
+                    catch(Exception e){
+                        System.out.println("Error");
+                    }
+                    try{
+                        pay(payingPlayer, amountToPay, receivingPlayer);
+                    }
+                    catch(Exception f){
+                        System.out.println("Unknown player");
+                    }
+                    break;
                 default:
                     System.out.println("Unknown command.");
                     break;
@@ -109,7 +129,8 @@ class CMD {
                 "MONEY [player]\t-Show the amount of money that [player] currently has\n" +
                 "MONEYALL\t-Show the amount of money that all players currently have\n" +
                 "DEDUCT [player] [amount]\t-Deduct [amount] of dollars from [player]\n" +
-                "GIVE [player] [amount]\t-Give [amount] of dollars to [player]\n");
+                "GIVE [player] [amount]\t-Give [amount] of dollars to [player]\n" +
+                "PAY [player1] [amount] [player2]\t-[player1] loses [amount] of money, [player2] gets [amount] of money\n");
     }
     private ArrayList convertStringToArray(String string){
         ArrayList<String> converted = new ArrayList<>();
@@ -160,5 +181,11 @@ class CMD {
     }
     private void give(String player, int amount){
         this.players.get(player).give(amount);
+    }
+    private void pay(String payingPlayer, int amountToPay, String receivingPlayer){
+        this.players.get(payingPlayer).deduct(amountToPay);
+        this.players.get(receivingPlayer).give(amountToPay);
+        printMoney(payingPlayer);
+        printMoney(receivingPlayer);
     }
 }
