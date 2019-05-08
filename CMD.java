@@ -115,6 +115,17 @@ class CMD {
                         System.out.println("Unknown player");
                     }
                     break;
+                case "remove":
+                    String removep = inputAsArray.get(1);
+
+                    if(this.players.containsKey(removep)) {
+                        this.players.remove(removep);
+                        System.out.println("Player removed");
+                    }
+                    else{
+                        System.out.println("Player doesn't exist");
+                    }
+                    break;
                 default:
                     System.out.println("Unknown command.");
                     break;
@@ -130,7 +141,8 @@ class CMD {
                 "MONEYALL\t-Show the amount of money that all players currently have\n" +
                 "DEDUCT [player] [amount]\t-Deduct [amount] of dollars from [player]\n" +
                 "GIVE [player] [amount]\t-Give [amount] of dollars to [player]\n" +
-                "PAY [player1] [amount] [player2]\t-[player1] loses [amount] of money, [player2] gets [amount] of money\n");
+                "PAY [player1] [amount] [player2]\t-[player1] loses [amount] of money, [player2] gets [amount] of money\n" +
+                "REMOVE [player]\t-Remove [player] from the game\n");
     }
     private ArrayList convertStringToArray(String string){
         ArrayList<String> converted = new ArrayList<>();
