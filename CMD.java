@@ -6,16 +6,14 @@ import java.util.Scanner;
 class CMD {
     private Scanner input;
 
-    private Logic logic;
-
-    private HashMap<String, Player> players;
+    private HashMap<String, Player> players = new HashMap<>();
 
     private boolean isGameStarted = false;
     private boolean isGameDone = false;
 
     CMD(Scanner reader){
         this.input = reader;
-        this.logic = new Logic(reader);
+
         showHelpDialog();
 
         while(!isGameDone){
@@ -31,8 +29,7 @@ class CMD {
                     showHelpDialog();
                     break;
                 case "start":
-                    this.logic.initGame();
-                    getPlayers();
+                    initGame();
                     this.isGameStarted = true;
                     break;
                 case "money":
@@ -88,6 +85,9 @@ class CMD {
                                 //If the amount is a Integer, and the player exists, deduct his money.
                                 give(inputAsArray.get(1), amount);
                                 printMoney(inputAsArray.get(1));
+                            }
+                            else{
+                                System.out.println("Unknown player");
                             }
                         }
                     }
@@ -164,9 +164,9 @@ class CMD {
         }
         return converted;
     }
-    private void getPlayers(){
-        this.players = this.logic.players;
-    }
+    //private void getPlayers(){
+     //   this.players = this.logic.players;
+    //}
     private void printMoney(String player){
         if(this.players.containsKey(player)){
             System.out.println(this.players.get(player).getPlayerName()
@@ -199,5 +199,48 @@ class CMD {
         this.players.get(receivingPlayer).give(amountToPay);
         printMoney(payingPlayer);
         printMoney(receivingPlayer);
+    }
+    private int getAmountOfPlayers(){
+        System.out.print("Enter the amount of players: ");
+        String userInput = this.input.nextLine();
+        int amountOfPlayers;
+
+        //try to convert the entered string into a number, if it fails, call function again until user enters valid input
+        try{
+            amountOfPlayers = Integer.parseInt(userInput);
+        }
+        catch(Exception e){
+            System.out.println("Invalid number");
+            amountOfPlayers = getAmountOfPlayers();
+        }
+        return amountOfPlayers;
+    }
+    private int getAmountStartingCash(){
+        System.out.print("Enter the amount of starting cash: ");
+        String userInput = this.input.nextLine();
+        int startingCash;
+
+        //try to convert the entered string into a number, if it fails, call function again until user enters valid input
+        try{
+            startingCash = Integer.parseInt(userInput);
+        }
+        catch(Exception e){
+            System.out.println("Invalid number");
+            startingCash = getAmountStartingCash();
+        }
+        return startingCash;
+    }
+    private void initGame() {
+        //Start the game
+        int playersA = getAmountOfPlayers();
+        int startingCash = getAmountStartingCash();
+        for (var i = 1; i <= playersA; i++) {
+            //Get the player names and create the players
+            System.out.print("\t" + i + ". player name: ");
+            String name = this.input.nextLine();
+            this.players.put(name.toLowerCase(), new Player(startingCash, name));
+
+            System.out.println();
+        }
     }
 }

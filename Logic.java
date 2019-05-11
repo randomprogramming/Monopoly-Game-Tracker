@@ -1,6 +1,6 @@
 import java.util.HashMap;
 import java.util.Scanner;
-
+/*
 //This class is supposed to take care of the Logic of the game itself
 class Logic {
     private Scanner input;
@@ -53,4 +53,4 @@ class Logic {
             System.out.println();
         }
     }
-}
+}*/
