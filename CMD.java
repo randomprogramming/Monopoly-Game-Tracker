@@ -24,17 +24,27 @@ class CMD {
             //Arraylist params: (0)->command
             //                  (1)->player
             //                  (2)->amount
+            //                  (3)->other
             switch (inputAsArray.get(0)){
                 case "help":
                     showHelpDialog();
                     break;
                 case "start":
-                    initGame();
+                    if(this.isGameStarted){
+                        //if game already started, ask user to confirm new game
+                        System.out.println("Game already started, restart game? (Y/N)");
+                        if (this.input.nextLine().toLowerCase().equals("y")) {
+                            this.players.clear();
+                            initGame();
+                        }
+                    }else{
+                        initGame();
+                    }
                     this.isGameStarted = true;
                     break;
                 case "money":
                     //expecting 1 param: name of person whose money will be printed
-                    if(isGameStarted) {
+                    if(this.isGameStarted) {
                         printMoney(inputAsArray.get(1));
                     }
                     else{
@@ -42,7 +52,7 @@ class CMD {
                     }
                     break;
                 case "moneyall":
-                    if(isGameStarted) {
+                    if(this.isGameStarted) {
                         printMoneyAll();
                     }
                     else{
@@ -50,10 +60,9 @@ class CMD {
                     }
                     break;
                 case "exit":
-                    this.isGameDone = true;
-                    break;
+                    return;
                 case "deduct":
-                    if(isGameStarted) {
+                    if(this.isGameStarted) {
                         //expecting 2 params: name of person who to deduct, amount to deduct
                         int amount = 0;
                         try {
@@ -66,6 +75,9 @@ class CMD {
                                 deduct(inputAsArray.get(1), amount);
                                 printMoney(inputAsArray.get(1));
                             }
+                        }
+                        if(this.players.get(inputAsArray.get(1)).isBankrupt()) {
+                            bankrupt(this.players.get(inputAsArray.get(1)));
                         }
                     }
                     else{
@@ -106,7 +118,7 @@ class CMD {
                         receivingPlayer = inputAsArray.get(3);
                     }
                     catch(Exception e){
-                        System.out.println("Error");
+                        System.out.println("Error, try again");
                     }
                     try{
                         pay(payingPlayer, amountToPay, receivingPlayer);
@@ -114,12 +126,15 @@ class CMD {
                     catch(Exception f){
                         System.out.println("Unknown player");
                     }
+                    if(this.players.get(inputAsArray.get(1)).isBankrupt()) {
+                        bankrupt(this.players.get(inputAsArray.get(1)));
+                    }
                     break;
                 case "remove":
                     String removep = inputAsArray.get(1);
 
                     if(this.players.containsKey(removep)) {
-                        this.players.remove(removep);
+                        removePlayer(this.players.get(removep));
                         System.out.println("Player removed");
                     }
                     else{
@@ -164,9 +179,6 @@ class CMD {
         }
         return converted;
     }
-    //private void getPlayers(){
-     //   this.players = this.logic.players;
-    //}
     private void printMoney(String player){
         if(this.players.containsKey(player)){
             System.out.println(this.players.get(player).getPlayerName()
@@ -241,6 +253,15 @@ class CMD {
             this.players.put(name.toLowerCase(), new Player(startingCash, name));
 
             System.out.println();
+        }
+    }
+    private void removePlayer(Player player){
+        this.players.remove(player.getPlayerName().toLowerCase());
+    }
+    private void bankrupt(Player player){
+        System.out.println(player.getPlayerName() + " went bankrupt! Remove player from game?(Y/N)");
+        if(this.input.nextLine().toLowerCase().equals("y")){
+            removePlayer(player);
         }
     }
 }

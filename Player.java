@@ -20,4 +20,7 @@ class Player {
     String getPlayerName(){
         return this.playerName;
     }
+    boolean isBankrupt(){
+        return this.money <= 0;
+    }
 }
